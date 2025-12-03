@@ -1,0 +1,29 @@
+name = "daily-painting-bot"
+main = "src/index.ts"
+compatibility_date = "2024-12-03"
+node_compat = true
+
+# Cron trigger for daily delivery at 8:00 AM UTC
+[triggers]
+crons = ["0 8 * * *"]
+
+# D1 Database binding
+[[d1_databases]]
+binding = "DB"
+database_name = "painting_bot_db"
+database_id = "placeholder-database-id"  # Replace with actual database ID after creation
+
+# Environment variables (non-sensitive)
+[vars]
+PERPLEXITY_API_URL = "https://api.perplexity.ai"
+PERPLEXITY_TEXT_MODEL = "llama-3.1-sonar-small-128k-online"
+PERPLEXITY_IMAGE_MODEL = "playground-v2.5"
+WHATSAPP_API_URL = "https://graph.facebook.com/v18.0"
+MAX_RETRIES = "3"
+RETRY_DELAY_MS = "1000"
+
+# Secrets (to be set via wrangler secret put)
+# WHATSAPP_API_TOKEN
+# WHATSAPP_PHONE_NUMBER_ID
+# PERPLEXITY_API_KEY
+# WEBHOOK_VERIFY_TOKEN
