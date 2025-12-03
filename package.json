@@ -9,9 +9,9 @@
     "tail": "wrangler tail",
     "test": "vitest --run",
     "test:watch": "vitest",
-    "db:create": "wrangler d1 create painting_bot_db",
-    "db:migrate": "wrangler d1 migrations apply painting_bot_db",
-    "db:migrate:local": "wrangler d1 migrations apply painting_bot_db --local"
+    "db:create": "wrangler d1 create daily-painting",
+    "db:migrate": "wrangler d1 migrations apply daily-painting --remote",
+    "db:migrate:local": "wrangler d1 migrations apply daily-painting --local"
   },
   "keywords": [
     "whatsapp",

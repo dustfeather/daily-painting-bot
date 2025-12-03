@@ -19,6 +19,7 @@ dist/
 # Wrangler project
 .dev.vars
 .wrangler/
+wrangler.toml
 
 # Environment variables
 .env

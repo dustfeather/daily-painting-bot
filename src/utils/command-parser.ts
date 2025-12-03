@@ -12,11 +12,16 @@ import { Command, SkillLevel, Language, parseSkillLevel, isLanguage } from '../t
  */
 export function parseCommand(message: string): Command {
   // Normalize the message: trim whitespace and convert to lowercase
-  const normalized = message.trim().toLowerCase();
+  let normalized = message.trim().toLowerCase();
 
   // Handle empty messages
   if (!normalized) {
     return { type: 'unknown', text: message };
+  }
+
+  // Remove leading slash if present (support both /command and command formats)
+  if (normalized.startsWith('/')) {
+    normalized = normalized.substring(1);
   }
 
   // Split message into words for parameter extraction
