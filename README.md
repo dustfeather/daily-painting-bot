@@ -50,6 +50,14 @@ Cloudflare Workers + D1 (SQLite) + Perplexity AI + WhatsApp Business API
 
 Daily prompts sent via Cron Triggers at 8:00 AM UTC.
 
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+## Security
+
+See [SECURITY.md](SECURITY.md) for reporting vulnerabilities.
+
 ## License
 
-ISC
+GPL-3.0 - See [LICENSE](LICENSE) for details.
