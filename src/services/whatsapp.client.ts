@@ -5,6 +5,7 @@
 
 import type { SendResult, BulkSendResult, WhatsAppSendMessageResponse } from '../types';
 import { Logger } from '../utils/logger';
+import { logApiUsage } from './api-logger';
 
 const logger = new Logger('WhatsAppClient');
 
@@ -12,11 +13,13 @@ export class WhatsAppClient {
   private readonly apiUrl: string;
   private readonly apiToken: string;
   private readonly phoneNumberId: string;
+  private readonly db: D1Database | null;
 
-  constructor(apiUrl: string, apiToken: string, phoneNumberId: string) {
+  constructor(apiUrl: string, apiToken: string, phoneNumberId: string, db: D1Database | null = null) {
     this.apiUrl = apiUrl;
     this.apiToken = apiToken;
     this.phoneNumberId = phoneNumberId;
+    this.db = db;
   }
 
   /**
@@ -59,6 +62,17 @@ export class WhatsAppClient {
           phoneNumber
         });
 
+        // Log failed API usage
+        if (this.db) {
+          await logApiUsage(this.db, {
+            service: 'whatsapp',
+            operation: 'send_message',
+            messagesSent: 0,
+            success: false,
+            error: `${response.status} - ${errorText}`,
+          });
+        }
+
         return {
           success: false,
           error: `WhatsApp API error: ${response.status} - ${errorText}`,
@@ -70,6 +84,16 @@ export class WhatsAppClient {
 
       logger.info('WhatsApp message sent successfully', { phoneNumber, messageId });
 
+      // Log successful API usage
+      if (this.db) {
+        await logApiUsage(this.db, {
+          service: 'whatsapp',
+          operation: 'send_message',
+          messagesSent: 1,
+          success: true,
+        });
+      }
+
       return {
         success: true,
         messageId,
@@ -77,6 +101,17 @@ export class WhatsAppClient {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       logger.error('Failed to send WhatsApp message', { phoneNumber, error: errorMessage });
+
+      // Log failed API usage
+      if (this.db) {
+        await logApiUsage(this.db, {
+          service: 'whatsapp',
+          operation: 'send_message',
+          messagesSent: 0,
+          success: false,
+          error: errorMessage,
+        });
+      }
 
       return {
         success: false,
@@ -130,6 +165,17 @@ export class WhatsAppClient {
           phoneNumber
         });
 
+        // Log failed API usage
+        if (this.db) {
+          await logApiUsage(this.db, {
+            service: 'whatsapp',
+            operation: 'send_message_with_image',
+            messagesSent: 0,
+            success: false,
+            error: `${response.status} - ${errorText}`,
+          });
+        }
+
         return {
           success: false,
           error: `WhatsApp API error: ${response.status} - ${errorText}`,
@@ -144,6 +190,16 @@ export class WhatsAppClient {
         messageId
       });
 
+      // Log successful API usage
+      if (this.db) {
+        await logApiUsage(this.db, {
+          service: 'whatsapp',
+          operation: 'send_message_with_image',
+          messagesSent: 1,
+          success: true,
+        });
+      }
+
       return {
         success: true,
         messageId,
@@ -154,6 +210,17 @@ export class WhatsAppClient {
         phoneNumber,
         error: errorMessage
       });
+
+      // Log failed API usage
+      if (this.db) {
+        await logApiUsage(this.db, {
+          service: 'whatsapp',
+          operation: 'send_message_with_image',
+          messagesSent: 0,
+          success: false,
+          error: errorMessage,
+        });
+      }
 
       return {
         success: false,
@@ -208,6 +275,17 @@ export class WhatsAppClient {
     }
 
     logger.info('Bulk message send completed', { totalSent, totalFailed });
+
+    // Log bulk operation summary
+    if (this.db) {
+      await logApiUsage(this.db, {
+        service: 'whatsapp',
+        operation: 'send_bulk_messages',
+        messagesSent: totalSent,
+        success: totalFailed === 0,
+        error: totalFailed > 0 ? `${totalFailed} messages failed` : undefined,
+      });
+    }
 
     return {
       totalSent,

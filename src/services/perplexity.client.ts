@@ -5,6 +5,7 @@
 
 import { SkillLevel, Language, PerplexityTextResponse, PerplexityImageResponse } from '../types';
 import { Logger } from '../utils/logger';
+import { logApiUsage } from './api-logger';
 
 export class PerplexityClient {
   private apiUrl: string;
@@ -15,6 +16,7 @@ export class PerplexityClient {
   private maxRetries: number;
   private retryDelayMs: number;
   private logger: Logger;
+  private db: D1Database | null;
 
   constructor(
     apiUrl: string,
@@ -23,7 +25,8 @@ export class PerplexityClient {
     imageModel: string,
     maxTokens: number = 500,
     maxRetries: number = 3,
-    retryDelayMs: number = 1000
+    retryDelayMs: number = 1000,
+    db: D1Database | null = null
   ) {
     this.apiUrl = apiUrl;
     this.apiKey = apiKey;
@@ -33,6 +36,7 @@ export class PerplexityClient {
     this.maxRetries = maxRetries;
     this.retryDelayMs = retryDelayMs;
     this.logger = new Logger('PerplexityClient');
+    this.db = db;
   }
 
   /**
@@ -62,6 +66,16 @@ export class PerplexityClient {
           textLength: extractedText.length,
         });
 
+        // Log successful API usage
+        if (this.db) {
+          await logApiUsage(this.db, {
+            service: 'perplexity',
+            operation: 'generate_text_prompt',
+            tokensUsed: response.usage?.total_tokens,
+            success: true,
+          });
+        }
+
         return extractedText;
       } catch (error) {
         const isLastAttempt = attempt === this.maxRetries - 1;
@@ -73,6 +87,16 @@ export class PerplexityClient {
         });
 
         if (isLastAttempt) {
+          // Log failed API usage
+          if (this.db) {
+            await logApiUsage(this.db, {
+              service: 'perplexity',
+              operation: 'generate_text_prompt',
+              success: false,
+              error: error instanceof Error ? error.message : String(error),
+            });
+          }
+
           throw new Error(
             `Failed to generate text prompt after ${this.maxRetries} attempts: ${
               error instanceof Error ? error.message : String(error)
@@ -210,6 +234,16 @@ export class PerplexityClient {
           imageUrl,
         });
 
+        // Log successful API usage
+        if (this.db) {
+          await logApiUsage(this.db, {
+            service: 'image_generation',
+            operation: 'generate_image',
+            imagesGenerated: 1,
+            success: true,
+          });
+        }
+
         return imageUrl;
       } catch (error) {
         const isLastAttempt = attempt === this.maxRetries - 1;
@@ -221,6 +255,16 @@ export class PerplexityClient {
         });
 
         if (isLastAttempt) {
+          // Log failed API usage
+          if (this.db) {
+            await logApiUsage(this.db, {
+              service: 'image_generation',
+              operation: 'generate_image',
+              success: false,
+              error: error instanceof Error ? error.message : String(error),
+            });
+          }
+
           throw new Error(
             `Failed to generate image after ${this.maxRetries} attempts: ${
               error instanceof Error ? error.message : String(error)

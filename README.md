@@ -15,27 +15,30 @@ A WhatsApp bot that delivers personalized painting prompts every morning, powere
 # Install dependencies
 npm install
 
-# Create D1 database (copy the ID to wrangler.toml)
-npm run db:create
-
 # Set up environment variables
 cp .dev.vars.example .dev.vars
-# Edit .dev.vars with your API keys
+# Edit .dev.vars with your API keys (see DEPLOYMENT.md for details)
 
-# Run migrations
+# Create D1 database and run migrations
+npm run db:create
 npm run db:migrate:local
 
 # Start dev server
 npm run dev
-
-# Deploy to production
-npm run deploy
 ```
 
-## Required API Keys
+For complete setup instructions, see **[DEPLOYMENT.md](DEPLOYMENT.md)**.
 
-- **WhatsApp Business API**: Get from [Meta for Developers](https://developers.facebook.com/)
-- **Perplexity AI**: Get from [Perplexity Settings](https://www.perplexity.ai/settings/api)
+## Required Secrets
+
+The bot requires four secrets to function:
+
+- `WHATSAPP_API_TOKEN` - WhatsApp Business API access token
+- `WHATSAPP_PHONE_NUMBER_ID` - WhatsApp Business phone number ID
+- `PERPLEXITY_API_KEY` - Perplexity AI API key
+- `WEBHOOK_VERIFY_TOKEN` - Custom webhook verification token
+
+See **[DEPLOYMENT.md](DEPLOYMENT.md)** for detailed instructions on obtaining these credentials.
 
 ## WhatsApp Commands
 
@@ -49,6 +52,32 @@ npm run deploy
 Cloudflare Workers + D1 (SQLite) + Perplexity AI + WhatsApp Business API
 
 Daily prompts sent via Cron Triggers at 8:00 AM UTC.
+
+## Deployment
+
+For production deployment:
+
+```bash
+# Authenticate with Cloudflare
+wrangler login
+
+# Create production database
+wrangler d1 create painting_bot_db
+
+# Run migrations
+npm run db:migrate
+
+# Set secrets
+wrangler secret put WHATSAPP_API_TOKEN
+wrangler secret put WHATSAPP_PHONE_NUMBER_ID
+wrangler secret put PERPLEXITY_API_KEY
+wrangler secret put WEBHOOK_VERIFY_TOKEN
+
+# Deploy
+npm run deploy
+```
+
+See **[DEPLOYMENT.md](DEPLOYMENT.md)** for complete deployment guide including WhatsApp webhook configuration.
 
 ## Contributing
 

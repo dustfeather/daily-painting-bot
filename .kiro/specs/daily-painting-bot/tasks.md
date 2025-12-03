@@ -93,7 +93,7 @@
   - Return welcome message in user's language
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 2.1, 2.2_
 
-- [ ] 13. Implement update handlers
+- [x] 13. Implement update handlers
   - Create handleUpdateSkill(phoneNumber, newSkillLevel?) function
   - Create handleUpdateLanguage(phoneNumber, newLanguage?) function
   - Display current value and prompt for new value if not provided
@@ -101,13 +101,13 @@
   - Return confirmation message in user's language
   - _Requirements: 3.1, 3.2, 3.3, 2.5_
 
-- [ ] 14. Implement unsubscribe handler
+- [x] 14. Implement unsubscribe handler
   - Create handleUnsubscribe(phoneNumber) function
   - Mark user as inactive in database
   - Return confirmation message in user's language
   - _Requirements: 4.1, 4.2_
 
-- [ ] 15. Implement on-demand prompt handler
+- [x] 15. Implement on-demand prompt handler
   - Create handleGetPrompt(phoneNumber) function
   - Check if user is subscribed
   - Retrieve user's skill level and language from database
@@ -115,13 +115,13 @@
   - Send prompt with image immediately via WhatsApp
   - _Requirements: 7.1, 7.2, 7.3_
 
-- [ ] 16. Implement help command handler
+- [x] 16. Implement help command handler
   - Create handleHelp(phoneNumber) function
   - Retrieve user's language preference (or default to Romanian)
   - Return localized help text with available commands
   - _Requirements: 8.1_
 
-- [ ] 17. Implement message routing handler
+- [x] 17. Implement message routing handler
   - Create handleIncomingMessage(request) function for webhook
   - Verify WhatsApp webhook signature
   - Parse incoming message and extract phone number
@@ -130,7 +130,7 @@
   - Return appropriate HTTP response
   - _Requirements: 1.1, 3.1, 4.1, 7.1, 8.1, 8.2_
 
-- [ ] 18. Implement scheduled delivery orchestrator
+- [x] 18. Implement scheduled delivery orchestrator
   - Create Scheduler class for daily delivery
   - Implement executeDailyDelivery() function
   - Retrieve all active users from database
@@ -140,21 +140,21 @@
   - Continue processing on individual message failures
   - _Requirements: 6.1, 6.2, 6.3, 6.4_
 
-- [ ] 19. Implement API usage logging
+- [x] 19. Implement API usage logging
   - Create logApiUsage(service, operation, tokensUsed, messagesSent, imagesGenerated, success, error) function
   - Log all Perplexity AI calls (text and image generation)
   - Log all WhatsApp API calls
   - Store logs in api_usage_logs table
   - _Requirements: 11.1, 11.2_
 
-- [ ] 20. Implement delivery reporting
+- [x] 20. Implement delivery reporting
   - Create logDeliveryReport(totalUsers, successCount, failureCount, promptsGenerated, imagesGenerated, executionTime) function
   - Generate report after each scheduled delivery
   - Store in delivery_logs table
   - Include API usage summary
   - _Requirements: 11.3_
 
-- [ ] 21. Implement main Worker entry point
+- [x] 21. Implement main Worker entry point
   - Create main fetch handler for HTTP requests (webhook)
   - Create scheduled handler for cron trigger
   - Wire up all components with dependency injection
@@ -162,7 +162,7 @@
   - Export Worker handlers
   - _Requirements: 9.1, 9.2_
 
-- [ ] 22. Create configuration and secrets setup
+- [x] 22. Create configuration and secrets setup
   - Document required secrets: WHATSAPP_API_TOKEN, WHATSAPP_PHONE_NUMBER_ID, PERPLEXITY_API_KEY, WEBHOOK_VERIFY_TOKEN
   - Create wrangler.toml with all configuration variables
   - Set up D1 database binding
