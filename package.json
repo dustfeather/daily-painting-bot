@@ -22,7 +22,7 @@
   "author": "",
   "license": "GPL-3.0",
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20251202.0",
+    "@cloudflare/workers-types": "^4.20251205.0",
     "@types/node": "^24.10.1",
     "@vitest/ui": "^4.0.15",
     "tsx": "^4.21.0",
